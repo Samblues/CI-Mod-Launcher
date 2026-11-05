@@ -44,7 +44,7 @@ public static class VersionGate
         if (!input.GameFound)
             return new GateDecision(false, PlayBlock.NoGame, "Select your Steam folder", "We'll find Bannerlord and unpack CI Modpack into its Modules folder, or into the Steam Workshop folder if you already have it there.");
         if (!input.FeedConfigured)
-            return new GateDecision(false, PlayBlock.NoFeed, "Modpack feed is missing", "This build has no modpack address.");
+            return new GateDecision(false, PlayBlock.NoFeed, "Enter a mod feed", "Paste the HTTPS address of manifest.json in Settings. Nothing is downloaded until you do.");
         if (!input.CheckCompleted)
             return new GateDecision(false, PlayBlock.Checking, "Checking the live modpack", "Comparing this PC with the current version.");
         if (!input.CheckSucceeded)

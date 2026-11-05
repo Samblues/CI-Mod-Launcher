@@ -556,7 +556,16 @@ public sealed class MainWindowViewModel : Observable
         {
             _busy = false;
             Interlocked.Exchange(ref _running, 0);
-            ApplyGate();
+            try
+            {
+                ApplyGate();
+            }
+            catch (Exception ex)
+            {
+                Error = Friendly(ex);
+                HasError = true;
+                Log.Error("gate", ex);
+            }
         }
     }
 
@@ -672,7 +681,7 @@ public sealed class MainWindowViewModel : Observable
         Notes = _manifest?.Notes ?? "";
         HasNotes = Notes.Length > 0;
         IsOk = decision.CanPlay;
-        IsWarn = decision.Block is PlayBlock.UpdateRequired or PlayBlock.NotInstalled or PlayBlock.FilesChanged or PlayBlock.AlreadyRunning or PlayBlock.GameVersionMismatch;
+        IsWarn = decision.Block is PlayBlock.UpdateRequired or PlayBlock.NotInstalled or PlayBlock.FilesChanged or PlayBlock.AlreadyRunning or PlayBlock.GameVersionMismatch or PlayBlock.NoFeed;
         IsBad = !decision.CanPlay && !IsWarn && decision.Block is not PlayBlock.Checking and not PlayBlock.Busy;
         IsIdle = !IsOk && !IsWarn && !IsBad;
         if (!_busy)
@@ -691,7 +700,7 @@ public sealed class MainWindowViewModel : Observable
             PlayBlock.NotInstalled => (UiAction.Update, T("download")),
             PlayBlock.UpdateRequired => (UiAction.Update, T("update")),
             PlayBlock.FilesChanged => (UiAction.Update, T("repair")),
-            PlayBlock.NoFeed => (UiAction.Settings, T("settings")),
+            PlayBlock.NoFeed => (UiAction.Settings, T("enterFeed")),
             PlayBlock.NoGame => (UiAction.Browse, T("selectSteamBtn")),
             PlayBlock.Offline or PlayBlock.GameVersionMismatch or PlayBlock.AlreadyRunning => (UiAction.Check, T("retry")),
             _ => (UiAction.None, T("pleaseWait"))
