@@ -1,0 +1,498 @@
+<Window x:Class="CILauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:CILauncher"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Coronas Ibéricas"
+        Width="1120" Height="760"
+        MinWidth="1000" MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Background="#0C0B0A"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI"
+        Icon="pack://application:,,,/Assets/CI_logo.ico">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <local:SoftWrapConverter x:Key="Wrap"/>
+        <local:BoolVisibilityConverter x:Key="Vis"/>
+        <local:OnTagConverter x:Key="On"/>
+        <local:ServerBadgeConverter x:Key="Badge"/>
+        <local:ServerMetaConverter x:Key="Meta"/>
+    </Window.Resources>
+    <Grid>
+        <Image Source="pack://application:,,,/Assets/site-bg.png" Stretch="UniformToFill" IsHitTestVisible="False"/>
+        <Border IsHitTestVisible="False">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#EE0C0907" Offset="0"/>
+                    <GradientStop Color="#990C0907" Offset="0.42"/>
+                    <GradientStop Color="#E60C0907" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Border BorderBrush="#66C4A35A" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="#CC0C0907" MouseLeftButtonDown="OnHeaderPressed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="22,0,16,0" VerticalAlignment="Center">
+                        <Image Source="pack://application:,,,/Assets/CI_logo.png" Width="34" Height="40" Stretch="Uniform" Margin="0,0,12,0"/>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="CORONAS IBÉRICAS" Style="{StaticResource Brand}"/>
+                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=LauncherSubtitle}" Style="{StaticResource Kicker}" Margin="1,2,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Border Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#66100C09" BorderBrush="#66C4A35A" BorderThickness="1" Padding="2"
+                            Visibility="{Binding ShowServerTab, Converter={StaticResource Vis}}">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource Tab}" Content="{Binding Source={x:Static local:UiText.S}, Path=Modpack}" Command="{Binding ShowModpackCommand}" Tag="{Binding ShowModpack, Converter={StaticResource On}}"/>
+                            <Button Style="{StaticResource Tab}" Content="{Binding Source={x:Static local:UiText.S}, Path=Servers}" Command="{Binding ShowServersCommand}" Tag="{Binding ShowServers, Converter={StaticResource On}}" Margin="2,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <Button Style="{StaticResource Lang}" Content="EN" Command="{Binding SetLanguageCommand}" CommandParameter="en" Tag="{Binding LangEn, Converter={StaticResource On}}"/>
+                        <Button Style="{StaticResource Lang}" Content="ES" Command="{Binding SetLanguageCommand}" CommandParameter="es" Tag="{Binding LangEs, Converter={StaticResource On}}"/>
+                        <Button Style="{StaticResource Lang}" Content="FR" Command="{Binding SetLanguageCommand}" CommandParameter="fr" Tag="{Binding LangFr, Converter={StaticResource On}}"/>
+                        <Button Style="{StaticResource Lang}" Content="DE" Command="{Binding SetLanguageCommand}" CommandParameter="de" Tag="{Binding LangDe, Converter={StaticResource On}}"/>
+                        <Button Style="{StaticResource Lang}" Content="RU" Command="{Binding SetLanguageCommand}" CommandParameter="ru" Tag="{Binding LangRu, Converter={StaticResource On}}"/>
+                    </StackPanel>
+                    <Button Grid.Column="3" Style="{StaticResource Ghost}" Height="32" Padding="12,0" Margin="0,0,8,0" VerticalAlignment="Center"
+                            Content="{Binding Source={x:Static local:UiText.S}, Path=Settings}" Command="{Binding SettingsCommand}" IsEnabled="{Binding SideEnabled}"/>
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <Button Style="{StaticResource ChromeButton}" Content="—" Click="OnMinimize" ToolTip="{Binding Source={x:Static local:UiText.S}, Path=Minimize}"/>
+                        <Button Style="{StaticResource CloseButton}" Content="✕" Click="OnClose" ToolTip="{Binding Source={x:Static local:UiText.S}, Path=Close}" Margin="2,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid Margin="28,18,28,8" Visibility="{Binding ShowModpack, Converter={StaticResource Vis}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Style="{StaticResource Card}" Padding="18,16" Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border>
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="#756C62"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsOk}" Value="True"><Setter Property="Background" Value="#6FCF97"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsWarn}" Value="True"><Setter Property="Background" Value="#E2B657"/></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsBad}" Value="True"><Setter Property="Background" Value="#E07A6A"/></DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                                    <Border HorizontalAlignment="Left" Padding="10,4">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#2A2622"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOk}" Value="True"><Setter Property="Background" Value="#6FCF97"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsWarn}" Value="True"><Setter Property="Background" Value="#E2B657"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsBad}" Value="True"><Setter Property="Background" Value="#E07A6A"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="{Binding StatusLabel}" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="#E8DCC8"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsIdle}" Value="False"><Setter Property="Foreground" Value="#0A0806"/></DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                    <TextBlock Text="{Binding Headline}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource Display}">
+                                                <Setter Property="FontSize" Value="30"/>
+                                                <Setter Property="Margin" Value="0,10,0,0"/>
+                                                <Setter Property="Foreground" Value="#E8DCC8"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsOk}" Value="True"><Setter Property="Foreground" Value="#8EE0B0"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsWarn}" Value="True"><Setter Property="Foreground" Value="#E2B657"/></DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsBad}" Value="True"><Setter Property="Foreground" Value="#E07A6A"/></DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding Detail}" Style="{StaticResource Body}" Margin="0,8,0,0" LineHeight="21"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="332"/>
+                            </Grid.ColumnDefinitions>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel>
+                                    <Border Style="{StaticResource Card}" Padding="16,14" Visibility="{Binding ShowFound, Converter={StaticResource Vis}}">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding FoundText}" Style="{StaticResource Display}" FontSize="15"/>
+                                            <TextBlock Text="{Binding UnpackPathText, Converter={StaticResource Wrap}}" Style="{StaticResource Body}" FontSize="13" Margin="0,6,0,14"/>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=LaunchWith}" Style="{StaticResource Kicker}" Margin="0,0,0,8"/>
+                                            <ScrollViewer MaxHeight="188" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                                <ItemsControl ItemsSource="{Binding LaunchMods}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type local:LaunchModChoice}">
+                                                            <Grid Margin="0,1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <CheckBox Content="{Binding Label}" IsChecked="{Binding Selected, Mode=TwoWay}" VerticalAlignment="Center"
+                                                                        Visibility="{Binding CanToggle, Converter={StaticResource Vis}}"/>
+                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" IsHitTestVisible="False"
+                                                                            Visibility="{Binding Required, Converter={StaticResource Vis}}">
+                                                                    <Border Width="16" Height="16" Background="#C4A35A" Margin="1,0,6,0" VerticalAlignment="Center">
+                                                                        <TextBlock Text="✓" FontSize="11" FontWeight="Bold" Foreground="#0A0806" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0"/>
+                                                                    </Border>
+                                                                    <TextBlock Text="{Binding Label}" Foreground="#F4EFE8" FontSize="14" VerticalAlignment="Center"/>
+                                                                </StackPanel>
+                                                                <Button Grid.Column="1" Style="{StaticResource Star}" Content="★" Command="{Binding ToggleFavouriteCommand}"
+                                                                        Visibility="{Binding CanFavourite, Converter={StaticResource Vis}}" ToolTip="{Binding FavouriteTip}"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Style="{StaticResource Card}" Margin="0,16,0,0" Padding="0" Visibility="{Binding ShowVersions, Converter={StaticResource Vis}}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="3"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border>
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#E2B657"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding VersionsMatch}" Value="True"><Setter Property="Background" Value="#6FCF97"/></DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                            <Grid Grid.Column="1" Margin="16,14">
+                                                <StackPanel Visibility="{Binding VersionsMatch, Converter={StaticResource Vis}}">
+                                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Live}" Style="{StaticResource Kicker}" Foreground="#6FCF97"/>
+                                                    <TextBlock Text="{Binding RemoteVersionText}" Style="{StaticResource Display}" FontSize="22" Margin="0,2,0,0"/>
+                                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=UpToDate}" Style="{StaticResource Body}" FontSize="13" Foreground="#6FCF97" Margin="0,4,0,0"/>
+                                                </StackPanel>
+                                                <Grid Visibility="{Binding VersionsMatch, Converter={StaticResource Vis}, ConverterParameter=invert}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Installed}" Style="{StaticResource Kicker}"/>
+                                                        <TextBlock Text="{Binding InstalledVersionText}" FontSize="22" FontWeight="SemiBold" Foreground="#C8BEB2"/>
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="1" Text="→" Margin="16,0" VerticalAlignment="Center" Foreground="#E2B657" FontSize="20"/>
+                                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Live}" Style="{StaticResource Kicker}" Foreground="#E2B657"/>
+                                                        <TextBlock Text="{Binding RemoteVersionText}" FontSize="22" FontWeight="SemiBold" Foreground="#E2B657"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                    <StackPanel Margin="0,18,0,0" Visibility="{Binding ShowProgress, Converter={StaticResource Vis}}">
+                                        <ProgressBar Value="{Binding ProgressValue, Mode=OneWay}"/>
+                                        <TextBlock Text="{Binding ProgressText}" Style="{StaticResource Body}" FontSize="13" Margin="0,8,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,20,0,4" Visibility="{Binding HasNotes, Converter={StaticResource Vis}}">
+                                        <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=PatchNotes}" Style="{StaticResource Kicker}" Margin="0,0,0,8"/>
+                                        <Border Style="{StaticResource Card}" Padding="14,12">
+                                            <ScrollViewer MaxHeight="140" VerticalScrollBarVisibility="Auto">
+                                                <TextBlock Text="{Binding Notes}" Style="{StaticResource Prose}" LineHeight="20"/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <Border Style="{StaticResource Card}" Padding="18,8" VerticalAlignment="Top">
+                                    <StackPanel>
+                                        <StackPanel Margin="0,12,0,10">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Steam}" Style="{StaticResource Kicker}"/>
+                                            <TextBlock Text="{Binding SteamPathText, Converter={StaticResource Wrap}}" Style="{StaticResource Prose}" LineHeight="18" Margin="0,6,0,0"/>
+                                            <Button Content="{Binding Source={x:Static local:UiText.S}, Path=ChangeFolder}" Style="{StaticResource Link}" Command="{Binding BrowseCommand}" IsEnabled="{Binding SideEnabled}" Margin="0,6,0,0"/>
+                                        </StackPanel>
+                                        <Border Height="1" Background="#2C2824" Margin="0,2"/>
+                                        <StackPanel Margin="0,12,0,10">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Bannerlord}" Style="{StaticResource Kicker}"/>
+                                            <TextBlock Text="{Binding GameVersionText}" Style="{StaticResource Display}" FontSize="22" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                        <Border Height="1" Background="#2C2824" Margin="0,2"/>
+                                        <StackPanel Margin="0,12,0,10">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=UnpacksInto}" Style="{StaticResource Kicker}"/>
+                                            <TextBlock Text="{Binding UnpackPathText, Converter={StaticResource Wrap}}" Style="{StaticResource Prose}" LineHeight="18" Margin="0,6,0,0"/>
+                                        </StackPanel>
+                                        <Border Height="1" Background="#2C2824" Margin="0,2"/>
+                                        <StackPanel Margin="0,12,0,14">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=LastUpdated}" Style="{StaticResource Kicker}"/>
+                                            <TextBlock Text="{Binding PublishedText}" Style="{StaticResource Display}" FontSize="16" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </ScrollViewer>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Margin="28,20,28,8" Visibility="{Binding ShowServers, Converter={StaticResource Vis}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="24"/>
+                            <ColumnDefinition Width="332"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,16,0">
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=ServersTitle}" Style="{StaticResource Display}" FontSize="22"/>
+                                    <TextBlock Text="{Binding ServerStatus}" Style="{StaticResource Body}" FontSize="13" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Style="{StaticResource Ghost}" Content="{Binding Source={x:Static local:UiText.S}, Path=Refresh}" Height="36" MinWidth="96" VerticalAlignment="Top"
+                                        Command="{Binding RefreshServersCommand}" IsEnabled="{Binding SideEnabled}"/>
+                            </Grid>
+                            <Border Grid.Row="1" Style="{StaticResource Card}" Padding="4">
+                                <ListBox ItemsSource="{Binding Servers}" SelectedItem="{Binding SelectedServer}" Background="Transparent" BorderThickness="0"
+                                         ItemContainerStyle="{StaticResource ServerItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="{Binding Name}" Style="{StaticResource Display}" FontSize="15"/>
+                                                <Border Grid.Column="1" Background="#100F0D" Padding="6,2" Margin="12,1,0,0" VerticalAlignment="Top">
+                                                    <TextBlock FontSize="10" FontWeight="SemiBold" Foreground="#A79C90">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding Converter="{StaticResource Badge}">
+                                                                <Binding Path="Local"/>
+                                                                <Binding Path="Live"/>
+                                                                <Binding Path="Online"/>
+                                                                <Binding Source="{x:Static local:UiText.S}" Path="Language"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </Border>
+                                                <TextBlock Grid.Row="1" Text="{Binding Endpoint}" Style="{StaticResource Body}" FontSize="13" Margin="0,3,0,0"/>
+                                                <TextBlock Grid.Row="2" Style="{StaticResource Body}" FontSize="12" Margin="0,2,0,0" Visibility="{Binding HasMeta, Converter={StaticResource Vis}}">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding Converter="{StaticResource Meta}">
+                                                            <Binding/>
+                                                            <Binding Source="{x:Static local:UiText.S}" Path="Language"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Border>
+                            <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,12,0,0" Padding="14,12">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=AddServer}" Style="{StaticResource Kicker}"/>
+                                    <TextBox Style="{StaticResource Field}" Text="{Binding AddName, UpdateSourceTrigger=PropertyChanged}" Margin="0,8,0,0" Tag="{Binding Source={x:Static local:UiText.S}, Path=NamePh}"/>
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="108"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Style="{StaticResource Field}" Text="{Binding AddAddress, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Grid.Column="2" Style="{StaticResource Field}" Text="{Binding AddPort, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Style="{StaticResource Field}" Text="{Binding AddPassword, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Button Grid.Column="2" Style="{StaticResource Ghost}" Content="{Binding Source={x:Static local:UiText.S}, Path=Add}" Height="38" MinWidth="84"
+                                                Command="{Binding AddServerCommand}" IsEnabled="{Binding SideEnabled}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <Border Grid.Column="2" Style="{StaticResource Card}" Padding="18,16">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Join}" Style="{StaticResource Kicker}"/>
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SelectServer}" Style="{StaticResource Body}" FontSize="15" Margin="0,14,0,0"
+                                               Visibility="{Binding HasSelectedServer, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                                    <StackPanel Margin="0,12,0,0" Visibility="{Binding HasSelectedServer, Converter={StaticResource Vis}}">
+                                        <TextBlock Text="{Binding SelectedTitle}" Style="{StaticResource Display}" FontSize="20" LineHeight="26"/>
+                                        <TextBlock Text="{Binding SelectedEndpoint}" Style="{StaticResource Body}" FontSize="13" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{Binding SelectedMeta}" Style="{StaticResource Prose}" Margin="0,4,0,0" Visibility="{Binding HasSelectedMeta, Converter={StaticResource Vis}}"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=PasswordLabel}" Style="{StaticResource Kicker}" Margin="0,20,0,8"/>
+                                    <TextBox Style="{StaticResource Field}" Text="{Binding JoinPassword, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HasSelectedServer}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Margin="0,18,0,0">
+                                    <Button Style="{StaticResource Primary}" Content="{Binding Source={x:Static local:UiText.S}, Path=Join}" HorizontalAlignment="Stretch"
+                                            Command="{Binding JoinCommand}" IsEnabled="{Binding CanJoin}"/>
+                                    <Button Style="{StaticResource Danger}" Content="{Binding Source={x:Static local:UiText.S}, Path=Remove}" HorizontalAlignment="Stretch" Margin="0,8,0,0"
+                                            Command="{Binding RemoveServerCommand}" Visibility="{Binding CanRemoveServer, Converter={StaticResource Vis}}"/>
+                                    <TextBlock Text="{Binding JoinHint}" Style="{StaticResource Body}" FontSize="13" LineHeight="18" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <local:SettingsView x:Name="SettingsPane" Margin="28,18,28,8" Visibility="{Binding ShowSettings, Converter={StaticResource Vis}}"/>
+
+                    <Border Background="#F20C0907" Visibility="{Binding ShowSetup, Converter={StaticResource Vis}}" Padding="36,20">
+                        <Border Style="{StaticResource Card}" Padding="28,24" MaxWidth="760" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupTitle}" Style="{StaticResource Display}" FontSize="28"/>
+                                    <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupLead}" Style="{StaticResource Body}" Margin="0,10,0,18" LineHeight="21"/>
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#C4A35A">
+                                            <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0A0806" FontWeight="SemiBold" FontSize="13"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupWorkshopk}" Style="{StaticResource Prose}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupWorkshop}" Style="{StaticResource Body}" FontSize="13" LineHeight="18" Margin="0,3,0,0"/>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupWorkshopLink}" Style="{StaticResource Body}" FontSize="13" Foreground="#C4A35A" Cursor="Hand" Margin="0,3,0,0" MouseLeftButtonDown="OnOpenWorkshop"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#C4A35A">
+                                            <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0A0806" FontWeight="SemiBold" FontSize="13"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupStep1k}" Style="{StaticResource Prose}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupStep1}" Style="{StaticResource Body}" FontSize="13" LineHeight="18" Margin="0,3,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#C4A35A">
+                                            <TextBlock Text="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0A0806" FontWeight="SemiBold" FontSize="13"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupStep2k}" Style="{StaticResource Prose}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupStep2}" Style="{StaticResource Body}" FontSize="13" LineHeight="18" Margin="0,3,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,18">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="26" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#C4A35A">
+                                            <TextBlock Text="4" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0A0806" FontWeight="SemiBold" FontSize="13"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupStep3k}" Style="{StaticResource Prose}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupStep3}" Style="{StaticResource Body}" FontSize="13" LineHeight="18" Margin="0,3,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Border Style="{StaticResource Card}" Padding="14,12" Margin="0,0,0,14" Visibility="{Binding HasSuggestedSteam, Converter={StaticResource Vis}}">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=SetupFound}" Style="{StaticResource Body}" FontSize="13" LineHeight="18"/>
+                                            <TextBlock Text="{Binding SuggestedSteamText, Converter={StaticResource Wrap}}" Style="{StaticResource Prose}" LineHeight="18" Margin="0,6,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding SetupError}" Foreground="#E58B7B" Style="{StaticResource Prose}" LineHeight="18" Margin="0,0,0,14" Visibility="{Binding HasSetupError, Converter={StaticResource Vis}}"/>
+                                    <StackPanel Orientation="Horizontal" Visibility="{Binding HasSuggestedSteam, Converter={StaticResource Vis}}">
+                                        <Button Style="{StaticResource Primary}" Content="{Binding Source={x:Static local:UiText.S}, Path=SetupUse}" MinWidth="180" Command="{Binding UseSuggestedSteamCommand}"/>
+                                        <Button Style="{StaticResource Ghost}" Content="{Binding Source={x:Static local:UiText.S}, Path=SetupChooseOther}" MinWidth="220" Margin="10,0,0,0" Command="{Binding BrowseCommand}"/>
+                                    </StackPanel>
+                                    <Button Style="{StaticResource Primary}" Content="{Binding Source={x:Static local:UiText.S}, Path=SetupChoose}" MinWidth="220" HorizontalAlignment="Left"
+                                            Command="{Binding BrowseCommand}" Visibility="{Binding HasSuggestedSteam, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Row="2" BorderBrush="#66C4A35A" BorderThickness="0,1,0,0" Padding="28,14,28,18" Background="#E60C0907">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Source={x:Static local:UiText.S}, Path=Website}" Style="{StaticResource Body}" VerticalAlignment="Center"/>
+                            <TextBlock Text="coronasibericas.com" Style="{StaticResource Body}" Foreground="#C4A35A" Cursor="Hand" VerticalAlignment="Center" Margin="6,0,0,0" MouseLeftButtonDown="OnOpenSite"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="{Binding Error}" Foreground="#E58B7B" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="13" Margin="16,0"
+                                   Visibility="{Binding ShowLauncherError, Converter={StaticResource Vis}}"/>
+                        <TextBlock x:Name="SettingsFooterError" Grid.Column="1" Foreground="#E58B7B" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="13" Margin="16,0"
+                                   Visibility="{Binding ShowSettings, Converter={StaticResource Vis}}"/>
+                        <Button Grid.Column="2" Style="{StaticResource Primary}" Content="{Binding PrimaryLabel}" Command="{Binding PrimaryCommand}" IsEnabled="{Binding PrimaryEnabled}"
+                                Visibility="{Binding ShowPlayFooter, Converter={StaticResource Vis}}"/>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding ShowSettings, Converter={StaticResource Vis}}">
+                            <Button Style="{StaticResource Ghost}" Content="{Binding Source={x:Static local:UiText.S}, Path=Cancel}" MinWidth="120" Click="OnSettingsCancel"/>
+                            <Button Style="{StaticResource Primary}" Content="{Binding Source={x:Static local:UiText.S}, Path=Save}" MinWidth="120" Margin="10,0,0,0" Click="OnSettingsSave"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

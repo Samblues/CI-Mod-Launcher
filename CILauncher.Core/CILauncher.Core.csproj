@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net48;net9.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>CILauncher.Core</RootNamespace>
+    <AssemblyName>CILauncher.Core</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+</Project>

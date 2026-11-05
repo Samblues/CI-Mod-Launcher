@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+    <RootNamespace>CILauncher</RootNamespace>
+    <AssemblyName>CIModpackLauncher</AssemblyName>
+    <Product>CI Modpack Launcher</Product>
+    <Version>1.0.0</Version>
+    <ApplicationTitle>Coronas Ibéricas</ApplicationTitle>
+    <StartupObject>CILauncher.Program</StartupObject>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CILauncher.Core\CILauncher.Core.csproj" AdditionalProperties="TargetFramework=net48" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.8.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\CI_logo.png" />
+    <Resource Include="Assets\CI_logo.ico" />
+    <Resource Include="Assets\site-bg.png" />
+  </ItemGroup>
+</Project>
