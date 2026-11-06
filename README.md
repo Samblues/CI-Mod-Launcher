@@ -1,6 +1,6 @@
 Publishing this so you can run your AI stuff and find out whats its doing for trustworthy points.
 
-If you're looking at it for how we did it the main things to change are:
+If you're looking at it to use as your own launcher with your own tweaks feel free to fork the codebase or copy/use it just note you'll need to change:
 
 1) You'll need a Feed for your modpack location (Like cloudflare R2), new admin pass, new secrets etc for your feed to upload locally.
 2) Change of all the CI logos, CI workshop folder, Links to the website and Links to the workshop file
