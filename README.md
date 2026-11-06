@@ -6,6 +6,8 @@ If you're looking at it to use as your own launcher with your own tweaks feel fr
 2) Change of all the CI logos, CI workshop folder, Links to the website and Links to the workshop file
 3) The module thats built will need to be for your mod if you want to link them into your mods sln's.
 
+**DOTNET 4.8 is used not 4.9 because it flags false positive if you use icons or atleast did for us.**
+
 - If you need help or advice ask, im [CI] Sam. 
 
 # CI Modpack Launcher
