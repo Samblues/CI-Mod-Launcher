@@ -4,7 +4,7 @@ If you're looking at it to use as your own launcher with your own tweaks feel fr
 
 1) You'll need a Feed for your modpack location (Like cloudflare R2), new admin pass, new secrets etc for your feed to upload locally.
 2) Change of all the CI logos, CI workshop folder, Links to the website and Links to the workshop file
-3) The module thats build will need to be for your mod.
+3) The module thats built will need to be for your mod if you want to link them into your mods sln's.
 
 - If you need help or advice ask, im [CI] Sam. 
 
